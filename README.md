@@ -1,4 +1,4 @@
 # phd-code
 Collection of code mentioned in Alice Fornasiero PhD thesis
 
-Ennesima prova
+This branch will host the functions in their raw format (i.e. not clean!)
