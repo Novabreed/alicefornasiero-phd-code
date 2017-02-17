@@ -1,6 +1,6 @@
 clean.geno<-function(infile="/projects/novabreed/share/afornasiero/RAD_seq/project_data/primitivo/43samples_300-450_fusion/cleaned_files/nohomo_noReAS_300-450_genomic_sorted.loc",
 					outfile="/projects/novabreed/share/afornasiero/RAD_seq/project_data/primitivo/43samples_300-450_fusion/cleaned_files/clean_nohomo_noReAS_300-450_genomic_sorted.loc",
-					max.missing.snps=0.2,max.missing.subj=0.2)
+					max.missing.snps=0.2, max.missing.subj=0.2)
 
 {
 library(data.table)
@@ -8,7 +8,7 @@ raw.data<-fread(infile)
 #Number of genotypes is the number of entry of the row table minus three (i.e. chrom, pos and hk x hk)
 n.geno<-lapply(lapply(apply(raw.data,1,table,exclude="--"),length),"-",3)
 
-#Remove lines of table with geno==1: these are monomorphic positions: they do not deserve to live!
+#Remove lines of table with geno==1: these are monomorphic positions
 raw.data<-raw.data[n.geno>1,]
 
 #For each SNP, build a table of genotypes (removing unknowns)
@@ -36,9 +36,9 @@ write.table(raw.data,outfile,sep="\t",col.names=FALSE,row.names=FALSE,quote=FALS
 
 
 
-phase.geno<-function(infile="/projects/novabreed/share/afornasiero/RAD_seq/project_data/primitivo/43samples_300-450_fusion/cleaned_files/clean_nohomo_noReAS_300-450_genomic_sorted.loc",
-					outfile="/projects/novabreed/share/afornasiero/RAD_seq/project_data/primitivo/43samples_300-450_fusion/cleaned_files/phased_nohomo_noReAS_300-450_genomic_sorted_0.2_0.2.loc",
-					threshold.phase=0.2,threshold.homo=0.1,max.dist.snp=50)
+phase.geno<-function(infile="phase.geno_examplefile.txt",
+					outfile="phase.geno_output.txt",
+					threshold.phase=0.2, threshold.homo=0.2, max.dist.snp=50)
 
 {
 library(data.table)
@@ -86,9 +86,9 @@ cat("phased!\n")
 break}
 }
 #So now the table is built between the current SNP (aaa) and the last snp for which we obtained reliable phase (last.snp.phased)
-pino<-table(unlist(raw.data[aaa-1,4:ncol(raw.data),with=FALSE]),unlist(raw.data[aaa,4:ncol(raw.data),with=FALSE]),unlist(raw.data[aaa+1,4:ncol(raw.data),with=FALSE]),exclude="--")
+mytable<-table(unlist(raw.data[aaa-1,4:ncol(raw.data),with=FALSE]),unlist(raw.data[aaa,4:ncol(raw.data),with=FALSE]),unlist(raw.data[aaa+1,4:ncol(raw.data),with=FALSE]),exclude="--")
 
-} else pino<-table(unlist(raw.data[aaa-1,4:ncol(raw.data),with=FALSE]),unlist(raw.data[aaa,4:ncol(raw.data),with=FALSE]),unlist(raw.data[aaa+1,4:ncol(raw.data),with=FALSE]),exclude="--")
+} else mytable<-table(unlist(raw.data[aaa-1,4:ncol(raw.data),with=FALSE]),unlist(raw.data[aaa,4:ncol(raw.data),with=FALSE]),unlist(raw.data[aaa+1,4:ncol(raw.data),with=FALSE]),exclude="--")
 
 
 #Count cis instances.
@@ -96,15 +96,15 @@ pino<-table(unlist(raw.data[aaa-1,4:ncol(raw.data),with=FALSE]),unlist(raw.data[
 #cis13 means that the first SNP is in cis with the third
 #trans13 means that the first SNP is in trans with the third
 #We then count the occurrencies of each cis trans combo
-cis12<-sum(pino[dimnames(pino)[[1]]=="hh",dimnames(pino)[[2]]=="hh",])+sum(pino[dimnames(pino)[[1]]=="kk",dimnames(pino)[[2]]=="kk",])
-trans12<-sum(pino[dimnames(pino)[[1]]=="hh",dimnames(pino)[[2]]=="kk",])+sum(pino[dimnames(pino)[[1]]=="kk",dimnames(pino)[[2]]=="hh",])
-cis13<-sum(pino[dimnames(pino)[[1]]=="hh",,dimnames(pino)[[3]]=="hh"])+sum(pino[dimnames(pino)[[1]]=="kk",,dimnames(pino)[[3]]=="kk"])
-trans13<-sum(pino[dimnames(pino)[[1]]=="hh",,dimnames(pino)[[3]]=="kk"])+sum(pino[dimnames(pino)[[1]]=="kk",,dimnames(pino)[[3]]=="hh"])
-cis23<-sum(pino[,dimnames(pino)[[2]]=="hh",dimnames(pino)[[3]]=="hh"])+sum(pino[,dimnames(pino)[[2]]=="kk",dimnames(pino)[[3]]=="kk"])
-trans23<-sum(pino[,dimnames(pino)[[2]]=="hh",dimnames(pino)[[3]]=="kk"])+sum(pino[,dimnames(pino)[[2]]=="kk",dimnames(pino)[[3]]=="hh"])
+cis12<-sum(mytable[dimnames(mytable)[[1]]=="hh",dimnames(mytable)[[2]]=="hh",])+sum(mytable[dimnames(mytable)[[1]]=="kk",dimnames(mytable)[[2]]=="kk",])
+trans12<-sum(mytable[dimnames(mytable)[[1]]=="hh",dimnames(mytable)[[2]]=="kk",])+sum(mytable[dimnames(mytable)[[1]]=="kk",dimnames(mytable)[[2]]=="hh",])
+cis13<-sum(mytable[dimnames(mytable)[[1]]=="hh",,dimnames(mytable)[[3]]=="hh"])+sum(mytable[dimnames(mytable)[[1]]=="kk",,dimnames(mytable)[[3]]=="kk"])
+trans13<-sum(mytable[dimnames(mytable)[[1]]=="hh",,dimnames(mytable)[[3]]=="kk"])+sum(mytable[dimnames(mytable)[[1]]=="kk",,dimnames(mytable)[[3]]=="hh"])
+cis23<-sum(mytable[,dimnames(mytable)[[2]]=="hh",dimnames(mytable)[[3]]=="hh"])+sum(mytable[,dimnames(mytable)[[2]]=="kk",dimnames(mytable)[[3]]=="kk"])
+trans23<-sum(mytable[,dimnames(mytable)[[2]]=="hh",dimnames(mytable)[[3]]=="kk"])+sum(mytable[,dimnames(mytable)[[2]]=="kk",dimnames(mytable)[[3]]=="hh"])
 
 #If ALL the three tables have a lack of homozygous we skip to the next SNP
-if((cis12+trans12)/sum(pino)<threshold.homo & (cis23+trans23)/sum(pino)<threshold.homo & (cis13+trans13)/sum(pino)<threshold.homo) next
+if((cis12+trans12)/sum(mytable)<threshold.homo & (cis23+trans23)/sum(mytable)<threshold.homo & (cis13+trans13)/sum(mytable)<threshold.homo) next
 
 #Check if we can attribute phase to pair 1-2
 if(cis12<trans12 & (cis12/trans12)<threshold.phase)
@@ -185,10 +185,13 @@ write.table(raw.data,outfile,sep="\t",col.names=FALSE,row.names=FALSE,quote=FALS
 
 
 
-define.haplo<-function(infile="/projects/novabreed/SNP/gatk/rkatsiteli/rkatsiteli_349_12b_19a_35b_58b/unifgenotyper/FC0637_FC0688/clean/SNP_del_ins/20160927_clean_hetSNP_DEL_INS_rkatsiteliALL_geno_only.goodReg.txt",
-						samplenames=c("rkatsiteli","Rkatsiteli_349-P4-12B","Rkatsiteli_349-P4-19A","Rkatsiteli_349-P4-35B","Rkatsiteli_349-P4-58B"),
-						outfile="/projects/novabreed/SNP/gatk/rkatsiteli/rkatsiteli_349_12b_19a_35b_58b/unifgenotyper/FC0637_FC0688/clean/SNP_del_ins/20160927_flip_clean_hetSNP_DEL_INS_rkatsiteliALL_geno_only.goodReg.txt",
-						min.info=1,remove.het=TRUE,plot=TRUE,mystep=999,tol=0.00000001)
+
+
+
+define.haplo<-function(infile="define.haplo_examplefile.txt",
+						samplenames=c("parent","progeny1","progeny2","progeny3","progeny4"),
+						outfile="define.haplo_output.txt",
+						remove.het=TRUE, plot=TRUE, mystep=999)
 
 {
 library(data.table)
@@ -214,6 +217,7 @@ geno<-geno[geno[,samplenames[1]]=="1",]
 cat("Computing informative positions\n")
 geno$info<-apply(apply(geno[,samplenames[2:length(samplenames)]],1,"!=","."),2,sum,na.rm=T)
 
+# divide in windows of size mystep and calculate the pattern of genotypes across samples
 myseq<-seq(1,nrow(geno),by=mystep)
 for(aaa in 1:(length(myseq)-1)) 
 {
@@ -244,6 +248,7 @@ for(aaa in 1:(length(myseq)-1))
 	threefourtable<-table(factor(sgeno[,7],level=c(0,2)),factor(sgeno[,8],level=c(0,2)),exclude=".")
 	threefourtable<-(threefourtable+0.0001)/(sum(threefourtable)+0.0001)
 
+	# If you are using 5 genotypes
 	if(length(samplenames[2:length(samplenames)])==5)
 	{
 		#Check the most probable pattern between subjects one and five
@@ -276,7 +281,7 @@ for(aaa in 1:(length(myseq)-1))
 		mypossiblehap$lik[bbb]<-mypossiblehap$lik[bbb]*twofourtable[row.names(twofourtable)==mypossiblehap$Var2[bbb],colnames(twofourtable)==mypossiblehap$Var4[bbb]]
 		mypossiblehap$lik[bbb]<-mypossiblehap$lik[bbb]*threefourtable[row.names(threefourtable)==mypossiblehap$Var3[bbb],colnames(threefourtable)==mypossiblehap$Var4[bbb]]
 	}
-
+		#If you are analysing 5 genotypes
 	if(length(samplenames[2:length(samplenames)])==5)
 	{
 		mypossiblehap$lik[bbb]<-mypossiblehap$lik[bbb]*onefivetable[row.names(onefivetable)==mypossiblehap$Var1[bbb],colnames(onefivetable)==mypossiblehap$Var5[bbb]]
@@ -356,10 +361,35 @@ if(plot)
 		
 		# plot one haplotype
 		mysumm<-summarize.by(small[,c("POS","toplot")],step=100)
-		plot(small$POS/1000000, small$toplot, xaxp=c(x1=0,x2=round(max(small$POS/1000000),0),n=round(max(small$POS/1000000),0)), ylim=c(0,1), main=chr.name[ddd], xlab="Position[Mbp]", type="l", lwd=0.5)
-		plot(mysumm$POS/1000000, mysumm$toplot, xaxp=c(x1=0,x2=round(max(mysumm$POS/1000000),0),n=round(max(mysumm$POS/1000000),0)), col="blue", pch=20, main=chr.name[ddd], xlab="Position[Mbp]", ylab="Haplotypes", cex.main=3, cex.lab=1.5, cex.axis=1.5)
+		pos<-small$POS/1000000
+		summpos<-mysumm$POS/1000000
+		plot(pos, small$toplot, xaxp=c(x1=0,x2=round(max(pos),0),n=round(max(pos),0)), ylim=c(0,1), main=chr.name[ddd], xlab="Position[Mbp]", type="l", lwd=0.5)
+		plot(summpos, mysumm$toplot, xaxp=c(x1=0,x2=round(max(summpos),0),n=round(max(summpos),0)), col="blue", pch=20, cex.axis=1.5)
+		title( main=chr.name[ddd], xlab="Position[Mbp]", ylab="Haplotypes", cex.main=3, cex.lab=1.5)
 		
 		}
 	dev.off()
 }
+}
+
+
+summarize.by<-function(x,step=1000,fun="mean")
+{
+
+        if(is.data.frame(x))
+        {
+                group<-sort(rep(seq(1,ceiling(nrow(x)/step)),step)[1:nrow(x)])
+                x<-data.frame(group,x)
+                x<-aggregate(x,by=list(x$group),FUN=fun)
+                x<-x[,-c(1,2)]
+                return(x)
+        }
+        if(is.vector(x))
+        {
+                group<-sort(rep(seq(1,ceiling(length(x)/step)),step)[1:length(x)])
+                x<-data.frame(group,x)
+                x<-aggregate(x,by=list(x$group),FUN=fun)
+                x<-x[,-c(1,2)]
+                return(x)
+        }
 }
