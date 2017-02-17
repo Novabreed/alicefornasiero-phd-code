@@ -2,7 +2,7 @@
 Collection of code mentioned in Alice Fornasiero PhD thesis.
 
 
-1. Function clean.geno
+1.Function clean.geno
 
 Uses thresholds to clean genotypes that were missing in a given number of samples and samples with insuffient genotype information.
 
@@ -16,7 +16,7 @@ max.missing.subj: minimum number of genotyped samples required (default: 0.2)
 
 
 ########################
-2. Function phase.geno
+2.Function phase.geno
 
 Define phase of alleles (coded into genotypes) arbitrarily assigned by Stacks
 
@@ -38,7 +38,7 @@ Parameters:
 
 
 ########################
-3. Function define.haplo
+3.Function define.haplo
 
 Define haplotypes based on homozygous SNPs in the progenies relative to heterozygous SNP positions in the parental variety. 
 The function is built to work along with 4 or 5 genotypes.
