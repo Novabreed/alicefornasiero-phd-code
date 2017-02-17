@@ -23,11 +23,11 @@ Define phase of alleles (coded into genotypes) arbitrarily assigned by Stacks
 Example of input file.
 It contains chromosome, position of RAD locus, joinmap-coded marker type , joinmap-coded genotypes of progenies
 CHR POS  MARKER   GENO_SAMPLE1  GENO_SAMPLE2  GENO_SAMPLE3  GENO_SAMPLE4 GENO_SAMPLE5  GENO_SAMPLEN
-1   1    <hkxhk>  hk            hh            hh            kk           kk           kk
-1   10   <hkxhk>  hk            kk            kk            hh           hh           hh
-1   20   <hkxhk>  hk            hh            hh            kk           kk           kk
-1   30   <hkxhk>  hk            hh            hh            kk           kk           kk
-1   40   <hkxhk>  hk            hh            hh            kk           kk           kk
+1   1    <hkxhk>  hk            hh            hh            kk           kk            kk
+1   10   <hkxhk>  hk            kk            kk            hh           hh            hh
+1   20   <hkxhk>  hk            hh            hh            kk           kk            kk
+1   30   <hkxhk>  hk            hh            hh            kk           kk            kk
+1   40   <hkxhk>  hk            hh            hh            kk           kk            kk
 
 
 Parameters:
